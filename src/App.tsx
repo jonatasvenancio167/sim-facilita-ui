@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom';
+import { Login } from './pages/login';
+import { Register } from './pages/register';
+import { Home } from './pages/home';
+import { useEffect, useState } from 'react';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+
+    if (storedUser) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+  console.log(storedUser)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={isAuthenticated ? <Home user={storedUser} /> : <Navigate to="/login" />}
+        />
+        <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated}/>} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter> 
+  )
 }
 
 export default App;
