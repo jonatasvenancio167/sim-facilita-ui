@@ -1,6 +1,7 @@
 import { Button, Card, CardBody, CardFooter, Input, Typography } from "@material-tailwind/react";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import api from '../../service/apiClient';
 
 type LoginProps = {
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,38 +10,27 @@ type LoginProps = {
 export function Login({setIsAuthenticated}: LoginProps) {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    email: 'john.doe@example.com',
-    password: 'senha123',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
   };
   
-  const handleLogin = () => {      
-    const mockUser = {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      birthDate: '1990-01-01',
-      phoneNumber: '+1 123-456-7890',
-      email: 'john.doe@example.com',
-      avatarUrl: 'https://example.com/avatar.jpg',
-    };
+  const handleLogin = async () => {      
+    try {
+      const response = await api.post('login', { email, password })
+      const user = response.data;
 
-    if (formData.email === mockUser.email && formData.password === 'senha123') {
-      localStorage.setItem('user', JSON.stringify(mockUser));
-
+      localStorage.setItem('user', JSON.stringify(user));
       setIsAuthenticated(true);
-
       navigate('/');
-    } else {
-      console.error('Falha na autenticação');
+    } catch (error) {
+      console.log('falha na autenticação', error)
     }
   };
   
@@ -56,8 +46,19 @@ export function Login({setIsAuthenticated}: LoginProps) {
           Sim Facilita 
         </Typography>
         <div className="flex w-72 flex-col gap-6">
-          <Input variant="standard" label="email" crossOrigin={undefined} />
-          <Input type="password" variant="standard" label="Password" crossOrigin={undefined} />
+          <Input 
+            variant="standard" 
+            label="email" 
+            crossOrigin={undefined} 
+            onChange={handleEmailChange} 
+          />
+          <Input 
+            type="password" 
+            variant="standard" 
+            label="Password" 
+            crossOrigin={undefined} 
+            onChange={handlePasswordChange} 
+          />
         </div>
         </CardBody>
         <CardFooter className="pt-0">

@@ -10,7 +10,6 @@ export function CommentForm({ onSubmit, initialText = '' }: CommentFormProps){
   const [commentText, setCommentText] = useState(initialText)
 
   const handleCommentSubmit = (e: FormEvent) => {
-    console.log(initialText)
     e.preventDefault();
     onSubmit(commentText);
     setCommentText('');
