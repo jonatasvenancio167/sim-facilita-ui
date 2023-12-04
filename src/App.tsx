@@ -16,7 +16,6 @@ function App() {
   }, []);
 
   const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-  console.log(storedUser)
 
   return (
     <BrowserRouter>
