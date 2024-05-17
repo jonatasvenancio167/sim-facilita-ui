@@ -15,7 +15,7 @@ export function Register() {
   };
 
   return(
-    <div className="md:container md:mx-auto mt-48">
+    <div className="md:container md:mx-auto">
       <Card className="mt-6 w-full">
         <div className="flex justify-between">
           <div className="ml-60">
